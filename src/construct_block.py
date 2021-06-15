@@ -25,6 +25,9 @@ def find_parent_hierarchy(transactions):
     return parent_order
 
 def find_optimised_block(max_weight, transactions):
+    """ Finds the optimal block with total weight less that 4 million and max fee.
+    The code has been taken from: https://www.geeksforgeeks.org/printing-items-01-knapsack/#:~:text=Given%20weights%20and%20values%20of,associated%20with%20n%20items%20respectively. """
+    
     K = [[0 for w in range(max_weight + 1)]
             for i in range(len(transactions) + 1)]
     for i in range(len(transactions) + 1):
