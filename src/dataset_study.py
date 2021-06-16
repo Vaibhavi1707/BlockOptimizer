@@ -3,8 +3,6 @@ from construct_block import find_parent_hierarchy
 from file_operations import parse_mempool_csv
 from transaction import MempoolTransaction
 
-
-
 def is_cyclic(transactions):
     parent_order = find_parent_hierarchy(transactions)
     return False
