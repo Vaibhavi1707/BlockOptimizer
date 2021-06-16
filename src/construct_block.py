@@ -28,25 +28,38 @@ def find_parent_hierarchy(transactions):
             connected_txns.append(ConnectedTransactions(parent_order))
     return connected_txns
 
+def get_partial_transactions(max_weight, connected_transactions):
+    """ Get a part of connected transactions such that the total weight is less than max_weight  """
+    # TODO
+    transactions = connected_transactions.hierarchy
+    partial_transactions = []
+    i = 0
+    while max_weight >= transactions[i].weight:
+        partial_transactions.append(transactions[i].txid)
+        i += 1
+    return partial_transactions
+
 def find_optimised_block(max_weight, transactions):
     """ Finds the optimal block with total weight less that 4 million and max fee. """
-    opt = [0 for w in range(max_weight + 1)] # Space optimisation for 0 - 1 Knapsack
-    for n in range(len(transactions)):
-        for w in range(max_weight, transactions[n].weight - 1, -1):
-            opt[w] = max(transactions[n].fee + opt[w - transactions[n].weight], 
-                         opt[w])
-        print(n)
-    print(opt[max_weight])
-    return backtrack_block(opt, opt[max_weight], max_weight, transactions)
-
-def backtrack_block(opt_array, opt_fee, max_weight, transactions):
-    pass
+    transactions.sort()
+    total_fee = 0
+    block = []
+    for transaction in transactions:
+        curr_wt = int(transaction.net_wt)
+        curr_fee = int(transaction.net_fee)
+        if max_weight >= curr_wt:
+            max_weight -= curr_wt
+            total_fee += curr_fee
+            block += [txn.txid for txn in transaction.hierarchy]
+        else:
+            block += get_partial_transactions(max_weight, transaction)
+    return block
     
 def construct_ordered_optimised_block(transactions, max_weight):
     """ Finds an ordered block such that for every transaction, it's parent comes 
     before it and the block maximises the total fees obtained. """
-    ordered_transactions = find_parent_hierarchy(transactions)
-    ordered_optimised_block = find_optimised_block(max_weight, ordered_transactions)
+    connected_transactions = find_parent_hierarchy(transactions)
+    ordered_optimised_block = find_optimised_block(max_weight, connected_transactions)
     return ordered_optimised_block
     
     
