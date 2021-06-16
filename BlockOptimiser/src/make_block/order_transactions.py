@@ -1,4 +1,7 @@
-from entities.connected_transactions import ConnectedTransactions
+import sys
+sys.path.insert(1, "../../../")
+
+from BlockOptimiser.src.entities.connected_transactions import ConnectedTransactions
 
 
 def find_txn_by_id(id_to_find, txns):

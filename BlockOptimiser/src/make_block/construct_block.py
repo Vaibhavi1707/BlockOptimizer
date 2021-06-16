@@ -1,7 +1,7 @@
 import sys
-sys.path.insert(0, ".")
+sys.path.insert(0, "../../../")
 
-from make_block.order_transactions import find_parent_order
+from BlockOptimiser.src.make_block.order_transactions import find_parent_order
 
 
 def get_partial_txns(max_wt, connected_txns):
@@ -9,8 +9,9 @@ def get_partial_txns(max_wt, connected_txns):
     txns = connected_txns.parent_order
     partial_txns, i = [], 0
     
-    while max_wt >= txns[i].wt:
+    while i < len(txns) and max_wt >= txns[i].wt:
         partial_txns.append(txns[i])
+        max_wt -= txns[i].wt
         i += 1
     
     return partial_txns
