@@ -1,3 +1,5 @@
+from connected_transactions import ConnectedTransactions
+
 def visit(transaction, transactions, visited, parent_order):
     """ Visits a transaction and all it's ancestors """
     visited[transaction.txid] = "grey"
@@ -12,47 +14,33 @@ def visit(transaction, transactions, visited, parent_order):
                     parent = transaction_pa 
             visit(parent, transactions, visited, parent_order)
     visited[transaction.txid] = "black"
-    parent_order.insert(0, transaction)
+    parent_order.append(transaction)
 
 def find_parent_hierarchy(transactions):
     """ Sort the transactions such that every transaction comes after its parent. """
     visited = dict(list(zip([transaction.txid for transaction in transactions], ["white" for transaction in transactions])))
-    parent_order = []
-    
+    connected_txns = []
+    count = 0    
     for transaction in transactions:
         if visited[transaction.txid] == "white":
+            parent_order = []
             visit(transaction, transactions, visited, parent_order)
-    return parent_order
+            connected_txns.append(ConnectedTransactions(parent_order))
+    return connected_txns
 
 def find_optimised_block(max_weight, transactions):
-    """ Finds the optimal block with total weight less that 4 million and max fee.
-    The code has been taken from: https://www.geeksforgeeks.org/printing-items-01-knapsack/#:~:text=Given%20weights%20and%20values%20of,associated%20with%20n%20items%20respectively. """
-    
-    K = [[0 for w in range(max_weight + 1)]
-            for i in range(len(transactions) + 1)]
-    for i in range(len(transactions) + 1):
-        for w in range(max_weight + 1):
-            if i == 0 or w == 0:
-                K[i][w] = 0
-            elif transactions[i - 1].weight <= w:
-                K[i][w] = max(transactions[i - 1].fee
-                  + K[i - 1][int(w - transactions[i - 1].weight)],
-                               K[i - 1][w])
-            else:
-                K[i][w] = K[i - 1][w]
-    res = K[len(transactions)][max_weight]
-    block = []
-    w = int(max_weight)
-    for i in range(len(transactions), 0, -1):
-        if res <= 0:
-            break
-        if res == K[i - 1][w]:
-            continue
-        else:
-            block.append(transactions[i - 1].txid)
-            res = res - transactions[i - 1].fee
-            w = int(w - transactions[i - 1].weight)
-    return block
+    """ Finds the optimal block with total weight less that 4 million and max fee. """
+    opt = [0 for w in range(max_weight + 1)] # Space optimisation for 0 - 1 Knapsack
+    for n in range(len(transactions)):
+        for w in range(max_weight, transactions[n].weight - 1, -1):
+            opt[w] = max(transactions[n].fee + opt[w - transactions[n].weight], 
+                         opt[w])
+        print(n)
+    print(opt[max_weight])
+    return backtrack_block(opt, opt[max_weight], max_weight, transactions)
+
+def backtrack_block(opt_array, opt_fee, max_weight, transactions):
+    pass
     
 def construct_ordered_optimised_block(transactions, max_weight):
     """ Finds an ordered block such that for every transaction, it's parent comes 

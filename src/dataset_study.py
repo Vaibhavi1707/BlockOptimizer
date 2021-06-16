@@ -3,6 +3,8 @@ from construct_block import find_parent_hierarchy
 from file_operations import parse_mempool_csv
 from transaction import MempoolTransaction
 
+
+
 def is_cyclic(transactions):
     parent_order = find_parent_hierarchy(transactions)
     return False
@@ -30,7 +32,11 @@ def parents_in_transactions(transactions):
 def sum_of_fees(transactions):
     return sum(transaction.fee for transaction in transactions)
 
+def no_of_connected_components(transactions):
+    return find_parent_hierarchy(transactions)[1]
+
 if __name__ == '__main__':
     transactions = [MempoolTransaction(*details) for details in parse_mempool_csv(input())]
     print(dataset_description(transactions))
     print("Sum of fees", sum_of_fees(transactions))
+    print(no_of_connected_components(transactions))
