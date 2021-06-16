@@ -17,3 +17,7 @@ Migrate to the ```src``` directory
 ```
 python3 main.py <path to mempool.csv>
 ```
+
+## References
+
+https://www.geeksforgeeks.org/fractional-knapsack-problem/

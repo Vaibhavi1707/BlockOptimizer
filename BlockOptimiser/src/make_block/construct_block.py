@@ -36,7 +36,7 @@ def find_optimum_block(max_wt, txns):
 
 
     
-def construct_ordered_optimum_block(txns, max_wt):
+def construct_ordered_optimum_block(max_wt, txns):
     """ Finds an ordered block which maximises the total fees obtained. """
     connected_txns = find_parent_order(txns)
     

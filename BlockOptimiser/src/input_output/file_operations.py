@@ -3,9 +3,9 @@ def parse_mempool_csv(path_to_mempool):
     with open(path_to_mempool) as f:
         return([line.strip().split(',') for line in f.readlines()][1:])
     
-def write_block_txt(transactions):
+def write_block_txt(transactions, write_to):
     """ Write transaction ids in the block file. """
-    with open("block.txt", "w") as output_file:
+    with open(write_to, "w") as output_file:
         for transaction in transactions[:-1]:
             output_file.write(transaction + "\n")
         output_file.write(transactions[-1])
