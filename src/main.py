@@ -1,7 +1,8 @@
 import sys
-sys.insert(0, ".")
-from file_operations import parse_mempool_csv, write_block_txt
-from construct_block import construct_ordered_optimum_block
+sys.path.insert(0, ".")
+
+from input_output.file_operations import parse_mempool_csv, write_block_txt
+from make_block.construct_block import construct_ordered_optimum_block
 from entities.transaction import MempoolTransaction
 
 PATH_TO_MEMPOOL = "mempool.csv" if len(sys.argv) == 1 else sys.argv[1]

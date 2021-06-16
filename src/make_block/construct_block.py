@@ -1,4 +1,7 @@
-from order_transactions import find_parent_order
+import sys
+sys.path.insert(0, ".")
+
+from make_block.order_transactions import find_parent_order
 
 
 def get_partial_txns(max_wt, connected_txns):
