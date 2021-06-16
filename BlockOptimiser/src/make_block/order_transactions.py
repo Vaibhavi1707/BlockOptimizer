@@ -7,7 +7,7 @@ def find_txn_by_id(id_to_find, txns):
         if id_to_find == txn.txid:
             return txn
 
-    raise Exception("Parent transaction not found.") 
+    raise Exception("Transaction not found.") 
 
 
 
