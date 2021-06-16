@@ -1,4 +1,4 @@
-from connected_transactions import ConnectedTransactions
+from entities.connected_transactions import ConnectedTransactions
 
 def visit(transaction, transactions, visited, parent_order):
     """ Visits a transaction and all it's ancestors """
@@ -30,12 +30,11 @@ def find_parent_hierarchy(transactions):
 
 def get_partial_transactions(max_weight, connected_transactions):
     """ Get a part of connected transactions such that the total weight is less than max_weight  """
-    # TODO
     transactions = connected_transactions.hierarchy
     partial_transactions = []
     i = 0
     while max_weight >= transactions[i].weight:
-        partial_transactions.append(transactions[i].txid)
+        partial_transactions.append(transactions[i])
         i += 1
     return partial_transactions
 
@@ -52,7 +51,9 @@ def find_optimised_block(max_weight, transactions):
             total_fee += curr_fee
             block += [txn.txid for txn in transaction.hierarchy]
         else:
-            block += get_partial_transactions(max_weight, transaction)
+            remain_txns = get_partial_transactions(max_weight, transaction)
+            total_fee += sum(txn.fee for txn in remain_txns)
+            block += [txn.txid for txn in remain_txns]
     return block
     
 def construct_ordered_optimised_block(transactions, max_weight):
