@@ -1,4 +1,5 @@
 import sys
+sys.insert(0, ".")
 from file_operations import parse_mempool_csv, write_block_txt
 from construct_block import construct_ordered_optimum_block
 from entities.transaction import MempoolTransaction
